@@ -1,16 +1,37 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CompanyModule } from './company/company.module';
 import { ForumDomainsModule } from './forum-domains/forum-domains.module';
 import { EvidenceModule } from './evidence/evidence.module';
 import { DangersModule } from './dangers/dangers.module';
 import { UserModule } from './user/user.module';
 import { UserController } from './user/user.controller';
 import { CompanyModule } from './company/company.module';
+import { Evidence } from './evidence/entities/evidence.entity';
+import { User } from './user/entities/user.entity';
+import { ForumDomain } from './forum-domains/entities/forum-domain.entity';
+import { Danger } from './dangers/entities/danger.entity';
+import { Company } from './company/entities/company.entity';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [CompanyModule, UserModule, DangersModule, EvidenceModule, ForumDomainsModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRoot({
+      type: 'mssql',
+      host: 'localhost',
+      port: 1433,
+      username: 'sa',
+      password: 'Senha123!',
+      database: 'master',
+      synchronize: true,
+      autoLoadEntities: true,
+      logging: true,
+      entities: [Evidence, ForumDomain, User, Danger, Company],
+      options: { trustServerCertificate: true },
+    }),
+CompanyModule, UserModule, DangersModule, EvidenceModule, ForumDomainsModule],
   controllers: [AppController, UserController],
   providers: [AppService],
 })
