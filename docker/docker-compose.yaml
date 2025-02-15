@@ -1,0 +1,36 @@
+version: '3.7'
+services:
+  DB:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sql-server
+    environment:
+      - ACCEPT_EULA=true
+      - MSSQL_SA_PASSWORD=Senha123!
+    restart: always
+    ports:
+      - 1433:1433
+    volumes:
+      - ./db_volume:/var/opt/mssql/data
+    networks:
+      - aplication_network
+  
+  # API:
+  #   depends_on:
+  #     - DB
+  #   image: node:latest
+  #   container_name: api
+  #   working_dir: /app
+  #   volumes:
+  #     - ../.:/app
+  #   ports:
+  #     - 3000:3000
+  #   networks:
+  #     - aplication_network 
+  #   command: sh -c "npm start"
+
+volumes:
+  db_volume:
+
+networks:
+  aplication_network:
+    driver: bridge
