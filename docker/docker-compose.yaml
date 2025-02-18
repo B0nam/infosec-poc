@@ -1,16 +1,13 @@
 version: '3.7'
 services:
   DB:
-    image: mcr.microsoft.com/mssql/server:2019-latest
-    container_name: sql-server
-    environment:
-      - ACCEPT_EULA=true
-      - MSSQL_SA_PASSWORD=Senha123!
-    restart: always
+    container_name: "pocdb"
+    image: postgres
     ports:
-      - 1433:1433
-    volumes:
-      - ./db_volume:/var/opt/mssql/data
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=infosec
+      - POSTGRES_PASSWORD=Senha123!
     networks:
       - aplication_network
   
