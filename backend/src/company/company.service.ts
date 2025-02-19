@@ -4,7 +4,6 @@ import { UpdateCompanyDto } from './dto/update-company.dto';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Company } from './entities/company.entity';
-import { error } from 'console';
 
 @Injectable()
 export class CompanyService {
@@ -44,14 +43,15 @@ export class CompanyService {
     return company;
   }
 
-  async update(id: number, updateCompanyDto: UpdateCompanyDto) {
+  async update(id: number, updateCompanyDto: UpdateCompanyDto): Promise<Company> {
     const company: Company = await this.findOne(id);
-
-    return await this.companyRepository.update({ id: id }, updateCompanyDto)
+    await this.companyRepository.update({ id: id }, updateCompanyDto)
+    return await this.findOne(id);
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<Company> {
     const company: Company = await this.findOne(id);
-    return await this.companyRepository.delete({ id: id })
+    await this.companyRepository.delete({ id: id })
+    return company;
   }
 }
