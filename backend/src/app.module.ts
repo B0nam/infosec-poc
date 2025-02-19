@@ -14,6 +14,7 @@ import { Danger } from './dangers/entities/danger.entity';
 import { Company } from './company/entities/company.entity';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -30,7 +31,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       logging: true,
       entities: [Evidence, ForumDomain, User, Danger, Company],
     }),
-CompanyModule, UserModule, DangersModule, EvidenceModule, ForumDomainsModule],
+CompanyModule, UserModule, DangersModule, EvidenceModule, ForumDomainsModule, AuthModule],
   controllers: [AppController, UserController],
   providers: [AppService],
 })

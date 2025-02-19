@@ -54,4 +54,15 @@ export class UserService {
     await this.userRepository.delete({ id: id });
     return user
   }
+
+  async findOneByEmail(email: string): Promise<User> {
+    const user: User | null = await this.userRepository.findOne({
+      where: {
+        email: email
+      }
+    });
+    if (user == null) throw new BadRequestException(`Usuário não encontrado com o email: ${email}`);
+    return user;
+  }
+
 }
