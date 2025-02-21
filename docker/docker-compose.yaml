@@ -1,0 +1,33 @@
+version: '3.7'
+services:
+  DB:
+    container_name: "pocdb"
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=infosec
+      - POSTGRES_PASSWORD=Senha123!
+    networks:
+      - aplication_network
+  
+  # API:
+  #   depends_on:
+  #     - DB
+  #   image: node:latest
+  #   container_name: api
+  #   working_dir: /app
+  #   volumes:
+  #     - ../.:/app
+  #   ports:
+  #     - 3000:3000
+  #   networks:
+  #     - aplication_network 
+  #   command: sh -c "npm start"
+
+volumes:
+  db_volume:
+
+networks:
+  aplication_network:
+    driver: bridge
