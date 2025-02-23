@@ -10,11 +10,7 @@ import { User } from './entities/user.entity';
   imports: [TypeOrmModule.forFeature([User])],
   controllers: [UserController],
   providers: [
-    UserService,
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
+    UserService
   ],
   exports: [UserService],
 })

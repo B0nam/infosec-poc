@@ -26,7 +26,8 @@ export class UserService {
 
     if (user != null) throw new BadRequestException('Email ou nome de usuário já cadastrado');
 
-    return await this.userRepository.create(createUserDto);
+    const newUser: User = await this.userRepository.create(createUserDto);
+    return await this.userRepository.save(newUser);
   }
 
   async findAll(): Promise<User[]> {

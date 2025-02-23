@@ -26,7 +26,8 @@ export class CompanyService {
 
     if (company != null) throw new BadRequestException('Nome ou dominio de empresa já cadastrado');
 
-    return await this.companyRepository.create(createCompanyDto)
+    const newCompany: Company = await this.companyRepository.create(createCompanyDto)
+    return await this.companyRepository.save(newCompany);
   }
 
   async findAll() {
