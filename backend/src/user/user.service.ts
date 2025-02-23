@@ -4,6 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -23,9 +24,10 @@ export class UserService {
         }
       ]
     });
-
+       
     if (user != null) throw new BadRequestException('Email ou nome de usuário já cadastrado');
-
+    createUserDto.password = bcrypt.hashSync(createUserDto.password, 10);
+    
     const newUser: User = await this.userRepository.create(createUserDto);
     return await this.userRepository.save(newUser);
   }
@@ -46,6 +48,7 @@ export class UserService {
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user: User = await this.findOne(id);
+    user.password = bcrypt.hashSync(updateUserDto.password, 10);
     await this.userRepository.update({ id: id }, updateUserDto);
     return await this.findOne(id);
   }

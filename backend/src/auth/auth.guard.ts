@@ -26,7 +26,7 @@ import {
         context.getHandler(),
         context.getClass(),
       ]);
-      if (isPublic) {
+      if (isPublic) { 
         return true;
       }
   
