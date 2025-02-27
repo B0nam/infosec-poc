@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
 import { ForumDomainsService } from './forum-domains.service';
 import { CreateForumDomainDto } from './dto/create-forum-domain.dto';
 import { UpdateForumDomainDto } from './dto/update-forum-domain.dto';
+import { AuthGuard, Public } from 'src/auth/auth.guard';
 
 @Controller('forum-domains')
 export class ForumDomainsController {
@@ -12,6 +13,7 @@ export class ForumDomainsController {
     return this.forumDomainsService.create(createForumDomainDto);
   }
 
+  @UseGuards(AuthGuard)
   @Get()
   findAll() {
     return this.forumDomainsService.findAll();
@@ -27,8 +29,9 @@ export class ForumDomainsController {
     return this.forumDomainsService.update(+id, updateForumDomainDto);
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.forumDomainsService.remove(+id);
+  async remove(@Param('id') id: string) {
+    await this.forumDomainsService.remove(+id);
   }
 }

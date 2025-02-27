@@ -13,6 +13,9 @@ export class User {
     email: string;
 
     @Column()
+    username: string;
+
+    @Column()
     @IsString()
     @IsStrongPassword()
     password: string;
