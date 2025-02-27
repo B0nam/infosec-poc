@@ -8,5 +8,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   imports: [TypeOrmModule.forFeature([ForumDomain])],
   controllers: [ForumDomainsController],
   providers: [ForumDomainsService],
+  exports: [ForumDomainsService]
 })
 export class ForumDomainsModule {}
