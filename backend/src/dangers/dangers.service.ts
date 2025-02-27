@@ -1,30 +1,24 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateDangerDto } from './dto/create-danger.dto';
 import { UpdateDangerDto } from './dto/update-danger.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Danger } from './entities/danger.entity';
 import { Repository } from 'typeorm';
-import { Company } from 'src/company/entities/company.entity';
-import { ForumDomain } from 'src/forum-domains/entities/forum-domain.entity';
+import { CompanyService } from 'src/company/company.service';
+import { ForumDomainsService } from 'src/forum-domains/forum-domains.service';
+import { PaginationDto } from 'src/_shared/dto/pagination.dto';
 
 @Injectable()
 export class DangersService {
   constructor(
     @InjectRepository(Danger) private readonly dangersRepository: Repository<Danger>,
-    @InjectRepository(Company) private readonly companiesRepository: Repository<Company>,
-    @InjectRepository(ForumDomain) private readonly forumDomainsRepository: Repository<ForumDomain>,
+    @Inject() private readonly companiesService: CompanyService,
+    @Inject() private readonly forumDomainsService: ForumDomainsService
   ) { }
 
   async create(createDangerDto: CreateDangerDto) {
-    const company = await this.companiesRepository.findOneBy({ id: createDangerDto.companyId });
-    if (!company) {
-      throw new NotFoundException("There isn't a valid company with the selected id");
-    }
-
-    const forumDomain = await this.forumDomainsRepository.findOneBy({ id: createDangerDto.forumDomainId });
-    if (!forumDomain) {
-      throw new NotFoundException("There isn't a valid forum domain with the selected id");
-    }
+    const company = await this.companiesService.findOne(createDangerDto.companyId);
+    const forumDomain = await this.forumDomainsService.findOne(createDangerDto.forumDomainId);
 
     const newDanger = this.dangersRepository.create({
       isSolved: createDangerDto.isSolved,
@@ -36,12 +30,18 @@ export class DangersService {
     return await this.dangersRepository.save(newDanger);
   }
 
-  async findAll() {
-    return await this.dangersRepository.find();
+  async findAll(pagination: PaginationDto) {
+    return await this.dangersRepository.find({
+      relations: ['company', 'forumDomain'],
+      skip: (pagination.page - 1) * pagination.quantity,
+      take: pagination.quantity
+    });
   }
 
   async findOne(id: number) {
-    return await this.dangersRepository.findOneBy({ id });
+    return await this.dangersRepository.findOne(
+      { where: { id }, relations: ['company', 'evidences', 'forumDomain'] }
+    );
   }
 
   async update(id: number, updateDangerDto: UpdateDangerDto) {
@@ -50,10 +50,10 @@ export class DangersService {
     danger.isSolved = updateDangerDto.isSolved;
 
     if (danger.forumDomain.id !== updateDangerDto.forumDomainId) {
-      const newForumDomain = await this.forumDomainsRepository.findOneBy({ id: updateDangerDto.forumDomainId });
+      const newForumDomain = await this.forumDomainsService.findOne(updateDangerDto.forumDomainId);
       danger.forumDomain = newForumDomain;
     }
-    
+
     return await this.dangersRepository.save(danger);
   }
 

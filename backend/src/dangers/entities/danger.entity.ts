@@ -27,7 +27,7 @@ export class Danger {
   @JoinColumn()
   company: Company;
 
-  @OneToMany(() => ForumDomain, (domain) => domain.danger)
+  @ManyToOne(() => ForumDomain, (domain) => domain.danger)
   @JoinColumn()
   forumDomain: ForumDomain;
 
