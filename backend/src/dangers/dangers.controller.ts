@@ -11,7 +11,7 @@ export class DangersController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createDangerDto: CreateDangerDto) {
+  async create(@Body() createDangerDto: CreateDangerDto) {
     return this.dangersService.create(createDangerDto);
   }
 
@@ -36,19 +36,19 @@ export class DangersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.dangersService.findOne(+id);
   }
 
   @Patch(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  update(@Param('id') id: string, @Body() updateDangerDto: UpdateDangerDto) {
-    return this.dangersService.update(+id, updateDangerDto);
+  async update(@Param('id') id: string, @Body() updateDangerDto: UpdateDangerDto) {
+    this.dangersService.update(+id, updateDangerDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string) {
-    return this.dangersService.remove(+id);
+  async remove(@Param('id') id: string) {
+    this.dangersService.remove(+id);
   }
 }
