@@ -30,8 +30,8 @@ export class CompanyController {
     return this.companyService.update(+id, updateCompanyDto);
   }
 
-  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param('id') id: string) {
     await this.companyService.remove(+id);
   }
