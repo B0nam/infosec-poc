@@ -1,5 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsDate } from 'class-validator';
+import { IsDate, IsString } from 'class-validator';
 import { Company } from 'src/company/entities/company.entity';
 import { Evidence } from 'src/evidence/entities/evidence.entity';
 import { ForumDomain } from 'src/forum-domains/entities/forum-domain.entity';
@@ -23,6 +22,10 @@ export class Danger {
   @Column()
   @IsDate()
   identificationDate: Date;
+
+  @Column()
+  @IsString()
+  title: string;
 
   @ManyToOne(() => Company, (company) => company.dangers)
   @JoinColumn()

@@ -46,8 +46,10 @@ export class DangersService {
 
   async update(id: number, updateDangerDto: UpdateDangerDto) {
     const danger = await this.findOne(id);
+
     danger.identificationDate = updateDangerDto.identificationDate;
     danger.isSolved = updateDangerDto.isSolved;
+    danger.title = updateDangerDto.title;
 
     if (danger.forumDomain.id !== updateDangerDto.forumDomainId) {
       const newForumDomain = await this.forumDomainsService.findOne(updateDangerDto.forumDomainId);

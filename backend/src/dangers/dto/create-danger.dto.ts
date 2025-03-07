@@ -9,6 +9,9 @@ export class CreateDangerDto {
     
     @ApiProperty()
     forumDomainId: number;
+
+    @ApiProperty()
+    title: string;
     
     @ApiProperty()
     isSolved: boolean;

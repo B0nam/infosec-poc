@@ -28,6 +28,7 @@ export class DangersController {
       return {
         id: danger.id,
         isSolved: danger.isSolved,
+        title: danger.title,
         identificationDate: danger.identificationDate,
         company: {
           id: danger.company.id,

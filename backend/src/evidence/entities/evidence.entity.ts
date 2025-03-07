@@ -25,6 +25,10 @@ export class Evidence {
   @IsString()
   postLink: string;
 
+  @Column()
+  @IsString()
+  author: string;
+
   @ManyToOne(() => Danger, (danger) => danger.evidences)
   @JoinColumn()
   danger: Danger;

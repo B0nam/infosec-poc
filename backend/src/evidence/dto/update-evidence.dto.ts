@@ -1,4 +1,15 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateEvidenceDto } from './create-evidence.dto';
+import { ApiProperty } from "@nestjs/swagger";
 
-export class UpdateEvidenceDto extends PartialType(CreateEvidenceDto) {}
+export class UpdateEvidenceDto {
+    @ApiProperty()
+    postDate: Date;
+
+    @ApiProperty()
+    evidenceText: string;
+
+    @ApiProperty()
+    postLink: string;
+
+    @ApiProperty()
+    author: string;
+}

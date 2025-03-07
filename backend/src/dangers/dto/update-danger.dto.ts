@@ -8,5 +8,8 @@ export class UpdateDangerDto {
     identificationDate: Date;
     
     @ApiProperty()
+    title: string;
+
+    @ApiProperty()
     isSolved: boolean;
 };
