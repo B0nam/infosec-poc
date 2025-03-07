@@ -4,7 +4,10 @@ import { CreateDangerDto } from './dto/create-danger.dto';
 import { UpdateDangerDto } from './dto/update-danger.dto';
 import { DangerDto } from './dto/danger.dto';
 import { PaginationDto } from 'src/_shared/dto/pagination.dto';
+import { ApiBearerAuth, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('Dangers')
 @Controller('dangers')
 export class DangersController {
   constructor(private readonly dangersService: DangersService) { }
@@ -16,7 +19,10 @@ export class DangersController {
   }
 
   @Get()
-  async findAll(@Query() pagination: PaginationDto): Promise<DangerDto> {
+  @ApiOkResponse({ type: [DangerDto] })
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'quantity', type: Number, required: false })
+  async findAll(@Query() pagination: PaginationDto): Promise<any> {
     const dangers = await this.dangersService.findAll(pagination);
     return dangers.map((danger) => {
       return {

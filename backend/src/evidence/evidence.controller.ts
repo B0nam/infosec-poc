@@ -2,8 +2,11 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { EvidenceService } from './evidence.service';
 import { CreateEvidenceDto } from './dto/create-evidence.dto';
 import { UpdateEvidenceDto } from './dto/update-evidence.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-@Controller('evidence')
+@ApiBearerAuth()
+@ApiTags('Evidences')
+@Controller('evidences')
 export class EvidenceController {
   constructor(private readonly evidenceService: EvidenceService) {}
 

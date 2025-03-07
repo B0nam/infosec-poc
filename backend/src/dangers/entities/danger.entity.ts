@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsDate } from 'class-validator';
 import { Company } from 'src/company/entities/company.entity';
 import { Evidence } from 'src/evidence/entities/evidence.entity';
