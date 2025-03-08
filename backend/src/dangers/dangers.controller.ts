@@ -5,6 +5,7 @@ import { UpdateDangerDto } from './dto/update-danger.dto';
 import { DangerDto } from './dto/danger.dto';
 import { PaginationDto } from 'src/_shared/dto/pagination.dto';
 import { ApiBearerAuth, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { EntityIdDto } from 'src/_shared/dto/entity-id.dto';
 
 @ApiBearerAuth()
 @ApiTags('Dangers')
@@ -14,8 +15,10 @@ export class DangersController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createDangerDto: CreateDangerDto) {
-    return this.dangersService.create(createDangerDto);
+  @ApiOkResponse({ type: EntityIdDto })
+  async create(@Body() createDangerDto: CreateDangerDto) {
+    const danger = await this.dangersService.create(createDangerDto);
+    return new EntityIdDto(danger.id);
   }
 
   @Get()
