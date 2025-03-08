@@ -24,25 +24,36 @@ export class UserService {
         }
       ]
     });
-       
+
     if (user != null) throw new BadRequestException('Email ou nome de usuário já cadastrado');
     createUserDto.password = bcrypt.hashSync(createUserDto.password, 10);
-    
+
     const newUser: User = await this.userRepository.create(createUserDto);
     return await this.userRepository.save(newUser);
   }
 
   async findAll(): Promise<User[]> {
-    return await this.userRepository.find();
+    return await this.userRepository.find({
+      relations: ['company'],
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        company: {
+          id: true
+        }
+      }
+    });
   }
 
   async findOne(id: number): Promise<User> {
     const user: User | null = await this.userRepository.findOne({
-      where: {
-        id: id
-      }
+      where: { id },
+      relations: ['company']
     });
-    if (user == null) throw new BadRequestException(`Usuário não encontrado com o id: ${id}`);
+    
+    if (!user) throw new BadRequestException(`Usuário não encontrado com o id: ${id}`);
+    
     return user;
   }
 
