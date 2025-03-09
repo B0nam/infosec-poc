@@ -4,6 +4,7 @@ import { UpdateForumDomainDto } from './dto/update-forum-domain.dto';
 import { ForumDomain } from './entities/forum-domain.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PaginationDto } from 'src/_shared/dto/pagination.dto';
 
 @Injectable()
 export class ForumDomainsService {
@@ -21,8 +22,11 @@ export class ForumDomainsService {
     return await this.forumDomainRepository.save(newForumDomain);
   }
 
-  async findAll(): Promise<ForumDomain[]> {
-    return await this.forumDomainRepository.find();
+  async findAll(pagination: PaginationDto): Promise<ForumDomain[]> {
+    return await this.forumDomainRepository.find({
+      skip: (pagination.page - 1) * pagination.quantity,
+      take: pagination.quantity
+    });
   }
 
   async findOne(id: number): Promise<ForumDomain> {

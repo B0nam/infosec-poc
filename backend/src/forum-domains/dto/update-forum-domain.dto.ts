@@ -1,4 +1,9 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateForumDomainDto } from './create-forum-domain.dto';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdateForumDomainDto extends PartialType(CreateForumDomainDto) {}
+export class UpdateForumDomainDto {
+    @ApiProperty()
+    domain: string;
+
+    @ApiProperty()
+    engine: string;
+}
