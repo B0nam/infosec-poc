@@ -1,36 +1,44 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Query } from '@nestjs/common';
 import { ForumDomainsService } from './forum-domains.service';
 import { CreateForumDomainDto } from './dto/create-forum-domain.dto';
 import { UpdateForumDomainDto } from './dto/update-forum-domain.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { EntityIdDto } from 'src/_shared/dto/entity-id.dto';
+import { ForumDomainDto } from './dto/forum-domain.dto';
+import { PaginationDto } from 'src/_shared/dto/pagination.dto';
 
 @ApiBearerAuth()
 @ApiTags('Forum Domains')
 @Controller('forum-domains')
 export class ForumDomainsController {
-  constructor(private readonly forumDomainsService: ForumDomainsService) {}
+  constructor(private readonly forumDomainsService: ForumDomainsService) { }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createForumDomainDto: CreateForumDomainDto) {
-    return this.forumDomainsService.create(createForumDomainDto);
+  @ApiCreatedResponse({ type: EntityIdDto })
+  async create(@Body() createForumDomainDto: CreateForumDomainDto) {
+    const forumDomain = await this.forumDomainsService.create(createForumDomainDto);
+    return new EntityIdDto(forumDomain.id);
   }
 
-  @UseGuards(AuthGuard)
   @Get()
-  findAll() {
-    return this.forumDomainsService.findAll();
+  @ApiOkResponse({ type: [ForumDomainDto] })
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'quantity', type: Number, required: false })
+  async findAll(@Query() pagination: PaginationDto) {
+    return await this.forumDomainsService.findAll(pagination);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.forumDomainsService.findOne(+id);
+  @ApiOkResponse({ type: ForumDomainDto })
+  async findOne(@Param('id') id: string) {
+    return await this.forumDomainsService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateForumDomainDto: UpdateForumDomainDto) {
-    return this.forumDomainsService.update(+id, updateForumDomainDto);
+  @ApiOkResponse({ type: ForumDomainDto })
+  async update(@Param('id') id: string, @Body() updateForumDomainDto: UpdateForumDomainDto) {
+    return await this.forumDomainsService.update(+id, updateForumDomainDto);
   }
 
   @Delete(':id')

@@ -5,6 +5,8 @@ import { UpdateDangerDto } from './dto/update-danger.dto';
 import { DangerDto } from './dto/danger.dto';
 import { PaginationDto } from 'src/_shared/dto/pagination.dto';
 import { ApiBearerAuth, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { EntityIdDto } from 'src/_shared/dto/entity-id.dto';
+import { DangerDetailsDto } from './dto/danger-details.dto';
 
 @ApiBearerAuth()
 @ApiTags('Dangers')
@@ -14,8 +16,10 @@ export class DangersController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @ApiOkResponse({ type: EntityIdDto })
   async create(@Body() createDangerDto: CreateDangerDto) {
-    return this.dangersService.create(createDangerDto);
+    const danger = await this.dangersService.create(createDangerDto);
+    return new EntityIdDto(danger.id);
   }
 
   @Get()
@@ -43,19 +47,22 @@ export class DangersController {
   }
 
   @Get(':id')
+  @ApiOkResponse({ type: DangerDetailsDto })
   async findOne(@Param('id') id: string) {
-    return this.dangersService.findOne(+id);
+    const danger = await this.dangersService.findOne(+id);
+    return new DangerDetailsDto(danger);
   }
 
   @Patch(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOkResponse({ type: DangerDto })
   async update(@Param('id') id: string, @Body() updateDangerDto: UpdateDangerDto) {
-    this.dangersService.update(+id, updateDangerDto);
+    const danger = await this.dangersService.update(+id, updateDangerDto);
+    return new DangerDto(danger);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param('id') id: string) {
-    this.dangersService.remove(+id);
+    await this.dangersService.remove(+id);
   }
 }

@@ -12,4 +12,7 @@ export class CreateEvidenceDto {
 
     @ApiProperty()
     author: string;
+
+    @ApiProperty()
+    dangerId: number;
 }

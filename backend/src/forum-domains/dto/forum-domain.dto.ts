@@ -1,5 +1,4 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { DangerDto } from "src/dangers/dto/danger.dto";
 
 export class ForumDomainDto {
   @ApiProperty()
@@ -10,7 +9,4 @@ export class ForumDomainDto {
 
   @ApiProperty()
   engine?: string;
-
-  @ApiProperty()
-  danger?: DangerDto[];
 }
