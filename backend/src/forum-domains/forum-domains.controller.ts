@@ -2,13 +2,17 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpCode,
 import { ForumDomainsService } from './forum-domains.service';
 import { CreateForumDomainDto } from './dto/create-forum-domain.dto';
 import { UpdateForumDomainDto } from './dto/update-forum-domain.dto';
-import { AuthGuard, Public } from 'src/auth/auth.guard';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('Forum Domains')
 @Controller('forum-domains')
 export class ForumDomainsController {
   constructor(private readonly forumDomainsService: ForumDomainsService) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create(@Body() createForumDomainDto: CreateForumDomainDto) {
     return this.forumDomainsService.create(createForumDomainDto);
   }
@@ -29,8 +33,8 @@ export class ForumDomainsController {
     return this.forumDomainsService.update(+id, updateForumDomainDto);
   }
 
-  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param('id') id: string) {
     await this.forumDomainsService.remove(+id);
   }

@@ -1,9 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class CreateForumDomainDto {
+export class SignInDto {
     @ApiProperty()
-    domain: string;
+    email: string;
 
     @ApiProperty()
-    engine: string;
+    password: string;
 }

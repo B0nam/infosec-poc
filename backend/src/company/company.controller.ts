@@ -2,9 +2,11 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, UseGuard
 import { CompanyService } from './company.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-@Controller('company')
+@ApiBearerAuth()
+@ApiTags('Companies')
+@Controller('companies')
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 
@@ -28,8 +30,8 @@ export class CompanyController {
     return this.companyService.update(+id, updateCompanyDto);
   }
 
-  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param('id') id: string) {
     await this.companyService.remove(+id);
   }
