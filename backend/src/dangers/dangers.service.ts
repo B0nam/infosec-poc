@@ -24,7 +24,8 @@ export class DangersService {
       isSolved: createDangerDto.isSolved,
       company,
       forumDomain,
-      identificationDate: createDangerDto.identificationDate
+      identificationDate: createDangerDto.identificationDate,
+      title: createDangerDto.title
     });
 
     return await this.dangersRepository.save(newDanger);

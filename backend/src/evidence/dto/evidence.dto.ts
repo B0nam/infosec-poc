@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Evidence } from "../entities/evidence.entity";
+import { EntityIdDto } from "src/_shared/dto/entity-id.dto";
 
 export class EvidenceDto {
     @ApiProperty()
@@ -18,7 +19,7 @@ export class EvidenceDto {
     author: string;
 
     @ApiProperty()
-    dangerId: number;
+    danger: EntityIdDto;
 
     constructor(evidence: Evidence) {
         this.id = evidence.id;
@@ -26,6 +27,9 @@ export class EvidenceDto {
         this.evidenceText = evidence.evidenceText;
         this.postLink = evidence.postLink;
         this.author = evidence.author;
-        this.dangerId = evidence.danger?.id;
+
+        if (evidence.danger) {
+            this.danger = new EntityIdDto(evidence.danger?.id);
+        }
     }
 }

@@ -10,5 +10,6 @@ import { ForumDomainsModule } from 'src/forum-domains/forum-domains.module';
   imports: [TypeOrmModule.forFeature([Danger]), CompanyModule, ForumDomainsModule],
   controllers: [DangersController],
   providers: [DangersService],
+  exports: [DangersService]
 })
 export class DangersModule {}

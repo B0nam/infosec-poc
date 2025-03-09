@@ -4,26 +4,38 @@ import { UpdateEvidenceDto } from './dto/update-evidence.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Evidence } from './entities/evidence.entity';
 import { Repository } from 'typeorm';
+import { PaginationDto } from 'src/_shared/dto/pagination.dto';
+import { FilterEvidencesDto } from './dto/filter-evidence.dto';
+import { Danger } from 'src/dangers/entities/danger.entity';
 
 @Injectable()
 export class EvidenceService {
   constructor(@InjectRepository(Evidence) private readonly evidenceRepository: Repository<Evidence>) { }
 
-  create(createEvidenceDto: CreateEvidenceDto): Promise<Evidence> {
+  async create(danger: Danger, createEvidenceDto: CreateEvidenceDto): Promise<Evidence> {
     const evidence = this.evidenceRepository.create({
       author: createEvidenceDto.author,
       evidenceText: createEvidenceDto.evidenceText,
       postDate: createEvidenceDto.postDate,
-      postLink: createEvidenceDto.postLink
+      postLink: createEvidenceDto.postLink,
+      danger: danger
     });
 
     return this.evidenceRepository.save(evidence);
   }
 
-  findAll(page: number, quantity: number): Promise<Evidence[]> {
+  findAll(pagination: PaginationDto, filters: FilterEvidencesDto): Promise<Evidence[]> {
     return this.evidenceRepository.find({
-      skip: (page - 1) * quantity,
-      take: quantity
+      where: {
+        danger: {
+          id: filters.dangerId
+        }
+      },
+      loadRelationIds: {
+        relations: ['danger']
+      },
+      skip: (pagination.page - 1) * pagination.quantity,
+      take: pagination.quantity
     });
   }
 
